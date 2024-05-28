@@ -19,7 +19,7 @@ start(logger_type="sqlite")
 
 # setup llamaindex
 llm = OpenAI(
-    model= "gpt-4o",
+    model= "gpt-3.5-turbo-0125",
     temperature=0.0,
     api_key= os.environ.get("OPENAPI_API_KEY", ""),
     )
@@ -37,7 +37,7 @@ Settings.embed_model = embed_model
 # setup autogen
 config_list = [
     {
-        "model": "gpt-4o",
+        "model": "gpt-3.5-turbo-0125",
         "api_key": os.environ.get("OPENAPI_API_KEY", ""),
     }
 ]
@@ -145,7 +145,9 @@ wikipedia_tool = wiki_spec.to_tool_list()[1]
 
 location_specialist = ReActAgent.from_tools(
     tools=[wikipedia_tool], 
-    llm=llm)
+    llm=llm,
+    max_iterations=30,
+    verbose=True)
 
 # create an autogen agent using the react agent
 trip_assistant = LLamaIndexConversableAgent(
@@ -177,7 +179,7 @@ group_chat_manager = GroupChatManager(
 chat_result = customer_proxy.initiate_chat(
     group_chat_manager,
     # message="I would like to visit tokyo on the 15th of April 2025. Can you help me find flights and accomodations? I will be departing from London, just me and Tara. We will need a return flight too. ",
-    message="What are the msot important thigns to see in tokyo?",
+    message="What are the most important thigns to see in tokyo if you like video games?",
     summary_method="reflection_with_llm",
 )
 
