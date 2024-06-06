@@ -1,14 +1,21 @@
 # Project
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+## Contents
 
-As the maintainer of this project, please make a few updates:
+This cookbook includes:
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## **Microsoft Phi-3 Cookbook**
+
+* [Introduction](🔜)
+    * [What is autogen](./md/autogen.md)(🔜)
+    * [Understanding Key Components](./md/components.md)(🔜)
+    * [What is Domain Driven Design](./md/domain_driven_design.md)(🔜)
+* [tutorials](🔜)
+    * [Tell me a joke, agents conversing style](./01_agents_and_conversation/readme.md)(🔜)
+    * [Tell me a joke, agents conversing style](./02_agents_with_tools/readme.md)(🔜)
+    * [Tell me a joke, agents conversing style](./03_agents_that_learn/readme.md)(🔜)
+    * [Tell me a joke, agents conversing style](./04_travel_agency_front_office/readme.md)(🔜)
+    * [Tell me a joke, agents conversing style](./05_travel_agency_with_front_and_back_office/readme.md)(🔜)
 
 ## Contributing
 

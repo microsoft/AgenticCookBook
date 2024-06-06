@@ -1,0 +1,11 @@
+{
+    "image": "python:latest",
+    "postCreateCommand": "pip install requirements.txt",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python"
+            ]
+        }
+    }
+}
