@@ -13,10 +13,10 @@ This cookbook includes:
     * [What is Domain Driven Design](./md/domain_driven_design.md)(🔜)
 * [tutorials](🔜)
     * [Tell me a joke, agents conversing style](./01_agents_and_conversation/readme.md)(🔜)
-    * [Tell me a joke, agents conversing style](./02_agents_with_tools/readme.md)(🔜)
-    * [Tell me a joke, agents conversing style](./03_agents_that_learn/readme.md)(🔜)
-    * [Tell me a joke, agents conversing style](./04_travel_agency_front_office/readme.md)(🔜)
-    * [Tell me a joke, agents conversing style](./05_travel_agency_with_front_and_back_office/readme.md)(🔜)
+    * [Give tools to agents](./02_agents_with_tools/readme.md)(🔜)
+    * [Teachable agent](./03_agents_that_learn/readme.md)(🔜)
+    * [Travel Agency front office](./04_travel_agency_front_office/readme.md)(🔜)
+    * [Travel Agency front and back office](./05_travel_agency_with_front_and_back_office/readme.md)(🔜)
 
 ## Contributing
 
