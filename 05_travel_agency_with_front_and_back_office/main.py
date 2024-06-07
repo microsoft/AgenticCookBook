@@ -81,7 +81,7 @@ accomodation_assistant = ConversableAgent(
 
 customer_assistant = ConversableAgent(
     "customer_service",
-    system_message="You handle all the final comunication, sending booking confirmamtions and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details.", 
+    system_message="You handle all the final comunication, sending booking confirmamtions and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details. As you learn more about the customers and their booking habits, you can use this information to provide better service.", 
     description="This agent handles all the final communication with the customer, sending booking confirmations and other details. To do this, it can access the current customer bookings details and bookings and use them in email and communications.",
     llm_config={"config_list": config_list},
     # human_input_mode="ALWAYS"
