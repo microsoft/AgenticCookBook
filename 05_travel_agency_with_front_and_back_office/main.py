@@ -6,6 +6,7 @@ from autogen import GroupChat
 from autogen import GroupChatManager
 from autogen import register_function
 from autogen.runtime_logging import start, stop
+from autogen.agentchat.contrib.capabilities.teachability import Teachability
 from llama_index.core import Settings
 from llama_index.core.agent import ReActAgent
 from llama_index.embeddings.openai import OpenAIEmbedding
@@ -86,6 +87,13 @@ customer_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     # human_input_mode="ALWAYS"
     )
+
+teachability = Teachability(
+    reset_db=True, 
+    path_to_db_dir="./customer_assistant_experience",
+    llm_config={"config_list": config_list})
+
+teachability.add_to_agent(customer_assistant)
 
 # register functions with autogen
 
