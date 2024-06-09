@@ -1,4 +1,5 @@
 {
+    "name": "Agentic Cookbook Development Environment",
     "image": "python:latest",
     "postCreateCommand": "pip install requirements.txt",
     "customizations": {
