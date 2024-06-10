@@ -7,16 +7,16 @@ This cookbook includes:
 
 ## **Microsoft Phi-3 Cookbook**
 
-* [Introduction](🔜)
-    * [What is autogen](./md/autogen.md)(🔜)
-    * [Understanding Key Components](./md/components.md)(🔜)
-    * [What is Domain Driven Design](./md/domain_driven_design.md)(🔜)
+* [Introduction](✅)
+    * [What is AutoGen](./docs/autogen.md)(✅)
+    * [Understanding Key Components](./docs/components.md)(✅)
+    * [What is Domain Driven Design](./docs/domain_driven_design.md)(✅)
 * [tutorials](🔜)
-    * [Tell me a joke, agents conversing style](./01_agents_and_conversation/readme.md)(🔜)
-    * [Give tools to agents](./02_agents_with_tools/readme.md)(🔜)
-    * [Teachable agent](./03_agents_that_learn/readme.md)(🔜)
-    * [Travel Agency front office](./04_travel_agency_front_office/readme.md)(🔜)
-    * [Travel Agency front and back office](./05_travel_agency_with_front_and_back_office/readme.md)(🔜)
+    * [Tell me a joke, agents conversing style](./01_agents_and_conversation/README.md)(🔜)
+    * [Give tools to agents](./02_agents_with_tools/README.md)(🔜)
+    * [Teachable agent](./03_agents_that_learn/README.md)(🔜)
+    * [Travel Agency front office](./04_travel_agency_front_office/README.md)(🔜)
+    * [Travel Agency front and back office](./05_travel_agency_with_front_and_back_office/README.md)(🔜)
 
 ## Contributing
 
