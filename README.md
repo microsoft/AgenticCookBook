@@ -7,10 +7,10 @@ This cookbook includes:
 
 ## **Microsoft Phi-3 Cookbook**
 
-* [Introduction](🔜)
-    * [What is autogen](./docs/autogen.md)(🔜)
-    * [Understanding Key Components](./docs/components.md)(🔜)
-    * [What is Domain Driven Design](./docs/domain_driven_design.md)(🔜)
+* [Introduction](✅)
+    * [What is AutoGen](./docs/autogen.md)(✅)
+    * [Understanding Key Components](./docs/components.md)(✅)
+    * [What is Domain Driven Design](./docs/domain_driven_design.md)(✅)
 * [tutorials](🔜)
     * [Tell me a joke, agents conversing style](./01_agents_and_conversation/README.md)(🔜)
     * [Give tools to agents](./02_agents_with_tools/README.md)(🔜)
