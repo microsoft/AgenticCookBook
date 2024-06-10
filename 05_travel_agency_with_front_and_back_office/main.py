@@ -9,8 +9,8 @@ from autogen.runtime_logging import start, stop
 from autogen.agentchat.contrib.capabilities.teachability import Teachability
 from llama_index.core import Settings
 from llama_index.core.agent import ReActAgent
-from llama_index.embeddings.openai import OpenAIEmbedding
-from llama_index.llms.openai import OpenAI
+from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
+from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
 from llamaindex_conversable_agent import LLamaIndexConversableAgent
 from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email
@@ -19,27 +19,35 @@ import os
 start(logger_type="sqlite")
 
 # setup llamaindex
-llm = OpenAI(
-    model= "gpt-3.5-turbo-0125",
+llm = AzureOpenAI(
+    deployment_name= os.environ.get("AZURE_OPENAI_MODEL", ""),
     temperature=0.0,
-    api_key= os.environ.get("OPENAPI_API_KEY", ""),
+    api_key= os.environ.get("AZURE_OPENAI_KEY", ""),
+    azure_endpoint= os.environ.get("AZURE_OPENAI_ENDPOINT", ""),
+    api_version= os.environ.get("AZURE_OPENAI_API_VERSION", ""),
     )
 
-embed_model = OpenAIEmbedding(
-                model= "text-embedding-ada-002",
-                temperature=0.0,
-                api_key= os.environ.get("OPENAPI_API_KEY", ""),
-                )
+embed_model = AzureOpenAIEmbedding(
+    deployment_name= os.environ.get("AZURE_OPENAI_EMBEDDING_MODEL", ""),
+    temperature=0.0,
+    api_key= os.environ.get("AZURE_OPENAI_KEY", ""),
+    azure_endpoint= os.environ.get("AZURE_OPENAI_ENDPOINT", ""),
+    api_version= os.environ.get("AZURE_OPENAI_API_VERSION", ""),
+    )
 
 Settings.llm = llm
 Settings.embed_model = embed_model
 
 
 # setup autogen
+
 config_list = [
     {
-        "model": "gpt-3.5-turbo-0125",
-        "api_key": os.environ.get("OPENAPI_API_KEY", ""),
+        "model": os.environ.get("AZURE_OPENAI_MODEL", ""),
+        "api_key": os.environ.get("AZURE_OPENAI_KEY", ""),
+        "api_type": "azure",
+        "base_url": os.environ.get("AZURE_OPENAI_ENDPOINT", ""),
+        "api_version": os.environ.get("AZURE_OPENAI_API_VERSION", "")
     }
 ]
 
@@ -61,7 +69,6 @@ flight_assistant = ConversableAgent(
 terminal = ConversableAgent(
     "computer_terminal",
     description="This computer terminal can be used to execute tools like booking flight and accommodations.",
-    # human_input_mode="ALWAYS"
     )
 
 accomodation_assistant = ConversableAgent(
@@ -69,23 +76,14 @@ accomodation_assistant = ConversableAgent(
     system_message="You help customers finding hotels and accomodations and booking them. When looking up accomodations, you can use external resources to provide more details. All retrieved information will be sent to the customer service which will present informations to the customer. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations and book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.", 
     description="This agent helps customers find accomodations and hotels and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
-    # human_input_mode="ALWAYS"
     )
 
-# trip_assistant = ConversableAgent(
-#     "trip_specialist",
-#     system_message="You help customers finding ore about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer.", 
-#     description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details.",
-#     llm_config={"config_list": config_list},
-#     # human_input_mode="ALWAYS"
-#     )
 
 customer_assistant = ConversableAgent(
     "customer_service",
     system_message="You handle all the final comunication, sending booking confirmamtions and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details. As you learn more about the customers and their booking habits, you can use this information to provide better service.", 
     description="This agent handles all the final communication with the customer, sending booking confirmations and other details. To do this, it can access the current customer bookings details and bookings and use them in email and communications.",
     llm_config={"config_list": config_list},
-    # human_input_mode="ALWAYS"
     )
 
 teachability = Teachability(
