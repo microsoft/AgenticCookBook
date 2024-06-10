@@ -1,7 +1,7 @@
 {
     "name": "Agentic Cookbook Development Environment",
     "image": "python:latest",
-    "postCreateCommand": "pip install requirements.txt",
+    "postCreateCommand": "pip install -r requirements.txt",
     "customizations": {
         "vscode": {
             "extensions": [
@@ -10,7 +10,9 @@
         }
     },
     "containerEnv": {
+        "AZURE_OPENAI_MODEL": "gpt-4-32k",
         "AZURE_OPENAI_KEY": "",
-        "AZURE_OPENAI_ENDPOINT": ""
+        "AZURE_OPENAI_ENDPOINT": "",
+        "AZURE_OPENAI_API_VERSION": "2024-02-01"
     }
 }
