@@ -86,12 +86,12 @@ customer_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     )
 
-teachability = Teachability(
-    reset_db=True, 
+customer_assistant_experiece = Teachability(
+    reset_db=False, 
     path_to_db_dir="./customer_assistant_experience",
     llm_config={"config_list": config_list})
 
-teachability.add_to_agent(customer_assistant)
+customer_assistant_experiece.add_to_agent(customer_assistant)
 
 # register functions with autogen
 
@@ -152,7 +152,7 @@ wikipedia_tool = wiki_spec.to_tool_list()[1]
 location_specialist = ReActAgent.from_tools(
     tools=[wikipedia_tool], 
     llm=llm,
-    max_iterations=5,
+    max_iterations=3,
     verbose=True)
 
 # create an autogen agent using the react agent
@@ -163,11 +163,18 @@ trip_assistant = LLamaIndexConversableAgent(
     description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details. This agent helps in finding attractions, history and all that there si to know abotu a place",
 )
 
+trip_assistant_experiece = Teachability(
+    reset_db=False, 
+    path_to_db_dir="./trip_assistant_experience",
+    llm_config={"config_list": config_list})
+
+trip_assistant_experiece.add_to_agent(trip_assistant)
+
 # create a group chat
 group_chat = GroupChat(
     agents=[customer_proxy, flight_assistant, accomodation_assistant, trip_assistant, customer_assistant, terminal],
     messages=[],
-    max_round=100,
+    max_round=1000,
     send_introductions=False,
     speaker_transitions_type="disallowed",
     allowed_or_disallowed_speaker_transitions={
