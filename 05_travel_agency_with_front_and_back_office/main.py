@@ -14,7 +14,7 @@ from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
 from llama_index.core.memory import ChatSummaryMemoryBuffer
 from llamaindex_conversable_agent import LLamaIndexConversableAgent
-from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email
+from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
 import os
 
 start(logger_type="sqlite")
@@ -79,6 +79,12 @@ accomodation_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     )
 
+activities_assistant = ConversableAgent(
+    "activities_assistant",
+    system_message="You help customers finding finding tickets for the attarctions and activities they want to do.", 
+    description="This agent helps customers find tickets for activites, venues and events and book them. It can use external resources to provide more details.",
+    llm_config={"config_list": config_list},
+    )
 
 customer_assistant = ConversableAgent(
     "customer_service",
@@ -118,7 +124,6 @@ register_function(
     caller=accomodation_assistant,
     name="find_accomodations",
     description="A tool for finding accomodation options in a location. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations.",
-    
 )
 
 register_function(
@@ -127,6 +132,22 @@ register_function(
     caller=accomodation_assistant,
     name="book_accomodation",
     description="A tool for booking accomodation. use book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.",
+    )
+
+register_function(
+    find_attractions_tickets,
+    executor=terminal,
+    caller=activities_assistant,
+    name="find_attractions_tickets",
+    description="A tool for finding accomodation options in a location. use find_attractions_tickets(attraction='british museum', , number_of_people=1) to find tickets for activities and attractions.",
+)
+
+register_function(
+    book_attraction_tickets,
+    executor=customer_proxy,
+    caller=activities_assistant,
+    name="book_attraction_tickets",
+    description="A tool for booking attraction tickets. use book_attraction_tickets(attraction='british museum', date='01/04/2025', number_of_people=1) to book tickets for activities and attractions.",
     )
 
 register_function(
@@ -177,7 +198,7 @@ trip_assistant_experiece.add_to_agent(trip_assistant)
 
 # create a group chat
 group_chat = GroupChat(
-    agents=[customer_proxy, flight_assistant, accomodation_assistant, trip_assistant, customer_assistant, terminal],
+    agents=[customer_proxy, activities_assistant,flight_assistant, accomodation_assistant, trip_assistant, customer_assistant, terminal],
     messages=[],
     max_round=1000,
     send_introductions=False,
@@ -196,7 +217,7 @@ group_chat_manager = GroupChatManager(
 
 chat_result = customer_proxy.initiate_chat(
     group_chat_manager,
-    message="I would like to visit tokyo on the 15th of April 2025. Can you help me find flights and accomodations? I will be departing from London, just me and Tara. We will need a return flight too. ",
+    message="Hi I would like to book a travel package.",
 summary_method="reflection_with_llm",
 )
 

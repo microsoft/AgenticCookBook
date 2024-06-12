@@ -8,12 +8,34 @@ import json
 
 bookings = {
     "flights": [], 
-    "accomodations": []   
+    "accomodations": []  ,
+    "attractions": [] 
 }
 
 emails = []
 
+def find_attractions_tickets(attraction: str, number_of_people:int) -> dict:
+    """Find tickets for an attraction for a given number of people."""
+    return {
+            "attraction": attraction,
+            "date": date.today(),
+            "price_pp": f"€{random.randrange(10, 50)}",
+            "number_of_people": number_of_people
+        }
+    
 
+def book_attraction_tickets(attraction: str, date: date, number_of_people: int) -> dict:
+    """Book tickets for an attraction for a given number of people."""
+    attraction_booking = {
+        "attraction": attraction,
+        "date": date,
+        "number_of_people": number_of_people,
+        "booking_reference": random.randrange(1000, 9999)
+    }
+
+    bookings["attractions"].append(attraction_booking)
+
+    return attraction_booking
 def send_booking_email(email: str, booking_details: dict) -> str:
     """Send an email with full booking details. The booking details must be a dictionary."""
     print(f"Sending email to {email}")
