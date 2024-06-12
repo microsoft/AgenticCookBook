@@ -12,6 +12,7 @@ from llama_index.core.agent import ReActAgent
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
+from llama_index.core.memory import ChatSummaryMemoryBuffer
 from llamaindex_conversable_agent import LLamaIndexConversableAgent
 from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email
 import os
@@ -149,17 +150,21 @@ wiki_spec = WikipediaToolSpec()
 # Get the search wikipedia tool
 wikipedia_tool = wiki_spec.to_tool_list()[1]
 
+memory = ChatSummaryMemoryBuffer(llm=llm, token_limit=16000)
+
 location_specialist = ReActAgent.from_tools(
     tools=[wikipedia_tool], 
     llm=llm,
-    max_iterations=3,
+    max_iterations=8,
+    memory=memory,
     verbose=True)
+
 
 # create an autogen agent using the react agent
 trip_assistant = LLamaIndexConversableAgent(
     "trip_specialist",
     llama_index_agent=  location_specialist,
-    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer.",
+    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
     description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details. This agent helps in finding attractions, history and all that there si to know abotu a place",
 )
 
@@ -191,9 +196,8 @@ group_chat_manager = GroupChatManager(
 
 chat_result = customer_proxy.initiate_chat(
     group_chat_manager,
-    # message="I would like to visit tokyo on the 15th of April 2025. Can you help me find flights and accomodations? I will be departing from London, just me and Tara. We will need a return flight too. ",
-    message="What are the most important thigns to see in tokyo if you like video games?",
-    summary_method="reflection_with_llm",
+    message="I would like to visit tokyo on the 15th of April 2025. Can you help me find flights and accomodations? I will be departing from London, just me and Tara. We will need a return flight too. ",
+summary_method="reflection_with_llm",
 )
 
 stop()
