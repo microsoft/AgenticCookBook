@@ -18,7 +18,7 @@ This cookbook includes:
 ## Opening the Resource in Codespace 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/microsoft/AgenticCookBook/tree/autogen)
 
-### 3. Storing Your API Keys
+### Storing Your API Keys
 
 Keeping your API keys safe and secure is important when building any type of application. We recommend not to store any API keys directly in your code. Committing those details to a public repository could result in security issues and even unwanted costs if used by a bad actor.
 
