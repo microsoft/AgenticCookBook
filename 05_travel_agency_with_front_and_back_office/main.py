@@ -152,7 +152,7 @@ wikipedia_tool = wiki_spec.to_tool_list()[1]
 location_specialist = ReActAgent.from_tools(
     tools=[wikipedia_tool], 
     llm=llm,
-    max_iterations=30,
+    max_iterations=5,
     verbose=True)
 
 # create an autogen agent using the react agent
