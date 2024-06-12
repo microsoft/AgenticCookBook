@@ -22,7 +22,7 @@ comedian = AssistantAgent(
     llm_config={"config_list": config_list})
 
 teachability = Teachability(
-    reset_db=True, 
+    reset_db=False, 
     path_to_db_dir="./comedian_assistant_experience",
     llm_config={"config_list": config_list})
 
