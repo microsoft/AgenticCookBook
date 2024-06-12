@@ -400,3 +400,7 @@ FodyWeavers.xsd
 autogen/travel agency/logs.db
 
 logs.db
+
+*.sqlite3
+
+05_travel_agency_with_front_and_back_office/customer_assistant_experience/uid_text_dict.pkl
