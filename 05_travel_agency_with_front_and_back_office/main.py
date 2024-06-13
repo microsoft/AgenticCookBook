@@ -50,7 +50,10 @@ config_list = [
 ]
 
 # create autogent agents
-#create the customer agent as user proxy
+
+# create the back office agents
+
+# create the customer agent as user proxy
 customer_proxy = ConversableAgent(
     "customer", 
     description="This the customer trying to book a trip, flights and accomodations.",
@@ -81,6 +84,8 @@ activities_assistant = ConversableAgent(
     description="This agent helps customers find tickets for activites, venues and events and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
     )
+
+# create the front office agents
 
 # create the customer assistant agent
 customer_assistant = ConversableAgent(
@@ -205,7 +210,7 @@ register_function(
     )
 
 
-# create a group chat
+# create a group chat, note that only the terminal  agents can communicate only with the front nad back office agents
 group_chat = GroupChat(
     agents=[customer_proxy, activities_assistant,flight_assistant, accomodation_assistant, trip_assistant, customer_assistant, terminal],
     messages=[],
