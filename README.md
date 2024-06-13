@@ -73,7 +73,6 @@ The environment file specifies the dependencies we need. `<environment-name>` re
 
 With that done, you can  go ahead and create your Conda environment by running the commands below in your command line/terminal
 
-
 ```bash
 conda env create --name ai4beg --file .devcontainer/environment.yml # .devcontainer sub path applies to only Codespace setups
 conda activate ai4beg
@@ -132,7 +131,6 @@ We have our official [AI Community Discord server](https://aka.ms/genai-discord)
 [![Join discord channel](https://dcbadge.vercel.app/api/server/ByRwuEEgH4)](https://aka.ms/genai-discord)
 
 The project team will also be on this Discord server to help any learners.
-
 
 # Requirements
 - Visual Studio Code

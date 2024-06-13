@@ -31,7 +31,7 @@ An Assistant Agent uses language models such as GPT to solve problems. Using the
 A User Proxy agent is an agent that interacts with human users. By default, these agents solicit user input at each turn of the conversation. Additionally, User Proxy Agents can:
 
 - Trigger code execution
-- Generate replies using a lanaguage model
+- Generate replies using a language model
 
 ## Group Chat Manager
 

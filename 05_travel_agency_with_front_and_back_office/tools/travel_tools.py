@@ -8,7 +8,7 @@ import json
 
 bookings = {
     "flights": [], 
-    "accomodations": []  ,
+    "accommodations": []  ,
     "attractions": [] 
 }
 
@@ -33,7 +33,7 @@ def send_booking_email(email: str, booking_details: dict) -> str:
 
 # apis to get bookings
 def get_bookings() -> dict:
-    """Usfeful for getting bookings."""
+    """Useful for getting bookings."""
     return bookings
 
 # apis to find and book tickets
@@ -101,17 +101,17 @@ def book_flight(
 
     return flight_booking
 
-# apis to find and book accomodations
-def find_accomodations(
+# apis to find and book accommodations
+def find_accommodations(
         location: str, 
         date: date
         ) -> list[dict]:
-    """Can find accomodations for a given location and date."""
+    """Can find accommodations for a given location and date."""
     values : list[dict] = []
     for i in range(random.randrange(3, 10)):
         values.append(
             {
-                "name": f"Accomodation {i}",
+                "name": f"Accommodation {i}",
                 "location": location,
                 "date": date,
                 "price_pn": f"€{random.randrange(100, 333)}",
@@ -121,21 +121,21 @@ def find_accomodations(
     
     return values
 
-def book_accomodation(
-        accomodation_name: str, 
+def book_accommodation(
+        accommodation_name: str, 
         check_in_date: date, 
         nights:int, 
         guests: int
         ) -> dict:
-    """Can book accomodation for a geoup of guests on specific date and number on nightrs. It returns the booking confirmation including the booking reference."""
-    accomodation_booking = {
-        "name": accomodation_name,
+    """Can book accommodation for a group of guests on specific date and number on nights. It returns the booking confirmation including the booking reference."""
+    accommodation_booking = {
+        "name": accommodation_name,
         "date": check_in_date,
         "nights": nights,
         "guests": guests,
         "booking_reference": random.randrange(1000, 9999)
     }
 
-    bookings["accomodations"].append(accomodation_booking)
+    bookings["accommodations"].append(accommodation_booking)
 
-    return accomodation_booking
+    return accommodation_booking
