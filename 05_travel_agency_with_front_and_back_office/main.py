@@ -5,14 +5,13 @@ from autogen import ConversableAgent
 from autogen import GroupChat
 from autogen import GroupChatManager
 from autogen import register_function
-from autogen.runtime_logging import start, stop
 from autogen.agentchat.contrib.capabilities.teachability import Teachability
 from llama_index.core import Settings
 from llama_index.core.agent import ReActAgent
+from llama_index.core.memory import ChatSummaryMemoryBuffer
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
-from llama_index.core.memory import ChatSummaryMemoryBuffer
 from llamaindex_conversable_agent import LLamaIndexConversableAgent
 from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
 import os
