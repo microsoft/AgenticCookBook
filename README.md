@@ -14,6 +14,7 @@ This cookbook includes:
     * [Teachable agent](./03_agents_that_learn/README.md)(✅)
     * [Travel Agency front office](./04_travel_agency_front_office/README.md)(🔜)
     * [Travel Agency front and back office](./05_travel_agency_with_front_and_back_office/README.md)(🔜)
+    * [Travel Agency with solver](./06_travel_agency_with_solver/README.md)(🔜)
 
 ## Opening the Resource in Codespace 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/microsoft/AgenticCookBook/tree/autogen)
