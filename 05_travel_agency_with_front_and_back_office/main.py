@@ -148,7 +148,7 @@ trip_assistant_experiece.add_to_agent(trip_specialist_assistant)
 register_function(
     find_flights,
     executor=terminal,
-    caller=flight_booking_assistant_assistant,
+    caller=flight_booking_assistant,
     name="find_flights",
     description="A tool for finding flight options between two locations. usage find_flights(origin='London', destination='Tokyo', date=2025-04-15) to find flights.",
     )
@@ -156,7 +156,7 @@ register_function(
 register_function(
     book_flight,
     executor=customer_proxy,
-    caller=flight_booking_assistant_assistant,
+    caller=flight_booking_assistant,
     name="book_flight",
     description="A tool for booking flights between two locations. use book_flight(flight_name='Flight 01',origin='London', destination='Tokyo',  departure_date=2025-04-15, passengers=1) to book a flight.",
     )
@@ -212,7 +212,15 @@ register_function(
 
 # create a group chat, note that only the terminal  agents can communicate only with the front nad back office agents
 group_chat = GroupChat(
-    agents=[customer_proxy, activities_booking_assistant,flight_booking_assistant_assistant, accommodation_booking_assistant, trip_specialist_assistant, customer_assistant, terminal],
+    agents=[
+        customer_proxy, 
+        activities_booking_assistant,
+        flight_booking_assistant, 
+        accommodation_booking_assistant, 
+        trip_specialist_assistant, 
+        customer_assistant, 
+        terminal
+        ],
     messages=[],
     max_round=1000,
     send_introductions=False,
