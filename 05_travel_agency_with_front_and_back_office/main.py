@@ -13,7 +13,7 @@ from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
 from llamaindex_conversable_agent import LLamaIndexConversableAgent
-from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
+from tools.travel_tools import find_flights, book_flight, find_accommodations, book_accommodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
 import os
 
 # setup llamaindex
@@ -36,7 +36,6 @@ embed_model = AzureOpenAIEmbedding(
 Settings.llm = llm
 Settings.embed_model = embed_model
 
-
 # setup autogen
 
 config_list = [
@@ -49,14 +48,14 @@ config_list = [
     }
 ]
 
-# create autogent agents
+# create autogen agents
 
 # create the back office agents
 
 # create the customer agent as user proxy
 customer_proxy = ConversableAgent(
     "customer", 
-    description="This the customer trying to book a trip, flights and accomodations.",
+    description="This the customer trying to book a trip, flights and accommodations.",
     human_input_mode="ALWAYS",
 )
 
@@ -69,19 +68,19 @@ flight_booking_assistant = ConversableAgent(
     # human_input_mode="ALWAYS"
     )
 
-# create the accomodation booking assistant agent
+# create the accommodation booking assistant agent
 accommodation_booking_assistant = ConversableAgent(
     "accommodation_booking_assistant",
-    system_message="You help customers finding hotels and accomodations and booking them. When looking up accomodations, you can use external resources to provide more details. All retrieved information will be sent to the customer service which will present informations to the customer. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations and book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.", 
-    description="This agent helps customers find accomodations and hotels and book them. It can use external resources to provide more details.",
+    system_message="You help customers finding hotels and accommodations and booking them. When looking up accommodations, you can use external resources to provide more details. All retrieved information will be sent to the customer service which will present informations to the customer. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations and book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.", 
+    description="This agent helps customers find accommodations and hotels and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
     )
 
 # create the activities booking assistant agent
 activities_booking_assistant = ConversableAgent(
     "activities_booking_assistant",
-    system_message="You help customers finding finding tickets for the attarctions and activities they want to do.", 
-    description="This agent helps customers find tickets for activites, venues and events and book them. It can use external resources to provide more details.",
+    system_message="You help customers finding finding tickets for the attractions and activities they want to do.", 
+    description="This agent helps customers find tickets for activities, venues and events and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
     )
 
@@ -90,18 +89,18 @@ activities_booking_assistant = ConversableAgent(
 # create the customer assistant agent
 customer_assistant = ConversableAgent(
     "customer_service",
-    system_message="You handle all the final comunication, sending booking confirmamtions and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details. As you learn more about the customers and their booking habits, you can use this information to provide better service.", 
+    system_message="You handle all the final communication, sending booking confirmations and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details. As you learn more about the customers and their booking habits, you can use this information to provide better service.", 
     description="This agent handles all the final communication with the customer, sending booking confirmations and other details. To do this, it can access the current customer bookings details and bookings and use them in email and communications.",
     llm_config={"config_list": config_list},
     )
 
 # add teachability to the customer assistant, this will allow the agent to learn from interactions
-customer_assistant_experiece = Teachability(
+customer_assistant_experience = Teachability(
     reset_db=False, 
     path_to_db_dir="./customer_assistant_experience",
     llm_config={"config_list": config_list})
 
-customer_assistant_experiece.add_to_agent(customer_assistant)
+customer_assistant_experience.add_to_agent(customer_assistant)
 
 # create the computer terminal agent, this will have the ability to execute tools
 terminal = ConversableAgent(
@@ -132,17 +131,17 @@ location_specialist = ReActAgent.from_tools(
 trip_specialist_assistant = LLamaIndexConversableAgent(
     "trip_specialist",
     llama_index_agent=  location_specialist,
-    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
+    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide more details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
     description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details. This agent helps in finding attractions, history and all that there si to know abotu a place",
 )
 
 # add teachability to the trip assistant, this will allow the agent to learn from interactions
-trip_assistant_experiece = Teachability(
+trip_assistant_experience = Teachability(
     reset_db=False, 
     path_to_db_dir="./trip_assistant_experience",
     llm_config={"config_list": config_list})
 
-trip_assistant_experiece.add_to_agent(trip_specialist_assistant)
+trip_assistant_experience.add_to_agent(trip_specialist_assistant)
 
 # register the tools with the agents
 register_function(
@@ -151,7 +150,7 @@ register_function(
     caller=flight_booking_assistant,
     name="find_flights",
     description="A tool for finding flight options between two locations. usage find_flights(origin='London', destination='Tokyo', date=2025-04-15) to find flights.",
-    )
+)
 
 register_function(
     book_flight,
@@ -159,30 +158,30 @@ register_function(
     caller=flight_booking_assistant,
     name="book_flight",
     description="A tool for booking flights between two locations. use book_flight(flight_name='Flight 01',origin='London', destination='Tokyo',  departure_date=2025-04-15, passengers=1) to book a flight.",
-    )
-
-register_function(
-    find_accomodations,
-    executor=terminal,
-    caller=accommodation_booking_assistant,
-    name="find_accomodations",
-    description="A tool for finding accomodation options in a location. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations.",
 )
 
 register_function(
-    book_accomodation,
+    find_accommodations,
+    executor=terminal,
+    caller=accommodation_booking_assistant,
+    name="find_accommodations",
+    description="A tool for finding accommodation options in a location. use find_accommodations(location='Tokyo', date=2025-04-15) to find accommodations.",
+)
+
+register_function(
+    book_accommodation,
     executor=customer_proxy,
     caller=accommodation_booking_assistant,
-    name="book_accomodation",
-    description="A tool for booking accomodation. use book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.",
-    )
+    name="book_accommodation",
+    description="A tool for booking accommodation. use book_accommodation(accommodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accommodation.",
+)
 
 register_function(
     find_attractions_tickets,
     executor=terminal,
     caller=activities_booking_assistant,
     name="find_attractions_tickets",
-    description="A tool for finding accomodation options in a location. use find_attractions_tickets(attraction='british museum', , number_of_people=1) to find tickets for activities and attractions.",
+    description="A tool for finding accommodation options in a location. use find_attractions_tickets(attraction='british museum', , number_of_people=1) to find tickets for activities and attractions.",
 )
 
 register_function(
@@ -191,7 +190,7 @@ register_function(
     caller=activities_booking_assistant,
     name="book_attraction_tickets",
     description="A tool for booking attraction tickets. use book_attraction_tickets(attraction='british museum', date='01/04/2025', number_of_people=1) to book tickets for activities and attractions.",
-    )
+)
 
 register_function(
     get_bookings,
@@ -207,7 +206,7 @@ register_function(
     caller = customer_assistant,
     name="send_booking_email",
     description="A tool for sending booking confirmation emails, call send_booking_email(email=dd@cp.com, booking_details = \{\}) to send an email with booking details.",
-    )
+)
 
 
 # create a group chat, note that only the terminal  agents can communicate only with the front nad back office agents
@@ -243,5 +242,5 @@ group_chat_manager = GroupChatManager(
 chat_result = customer_proxy.initiate_chat(
     group_chat_manager,
     message="Hi I would like to book a travel package.",
-summary_method="reflection_with_llm",
+    summary_method="reflection_with_llm",
 )
