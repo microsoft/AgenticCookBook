@@ -2,7 +2,7 @@
 
 This example is based on the [comedian example](../01_agents_and_conversation/README.md)
 
-The code is in Python and it sets up a conversation between two agents: a comedian agent and a user proxy agent. 
+The code in [main.py](main.py) sets up a conversation between two agents: a comedian agent and a user proxy agent. 
 
 Let's break down the code step by step:
 

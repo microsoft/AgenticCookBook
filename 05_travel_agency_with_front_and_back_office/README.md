@@ -15,3 +15,4 @@ Front office and back office can use the terminal to perform various operations:
  * email the final bookings back to the customer
 
 Let's break down the code step by step:
+
