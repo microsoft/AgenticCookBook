@@ -1,6 +1,6 @@
 ## Comedian Assistant Experience 
 
-This example is based on a Travel Agency scenario 
+This example is based on the [comedian example](../01_agents_and_conversation/README.md)
 
 The code is in Python and it sets up a conversation between two agents: a comedian agent and a user proxy agent. 
 
