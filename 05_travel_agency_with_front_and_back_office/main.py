@@ -60,8 +60,8 @@ customer_proxy = ConversableAgent(
     human_input_mode="ALWAYS",
 )
 
-# create the flight assistant agent
-flight_assistant = ConversableAgent(
+# create the flight booking assistant agent
+flight_booking_assistant = ConversableAgent(
     "flight_booking_assistant",
     system_message="You help customers finding flights and booking them.  All retrieved information will be sent to the customer service which will present informations to the customer. Use the tool find_flights(origin='London', destination='Tokyo', date=2025-04-15) to find flights and book_flight(flight_name='Flight 01',origin='London', destination='Tokyo',  departure_date=2025-04-15, passengers=1) to book a flight.", 
     description="This agent helps customers find flights and book them. It can use external resources to provide more details.",
@@ -69,17 +69,17 @@ flight_assistant = ConversableAgent(
     # human_input_mode="ALWAYS"
     )
 
-# create the accomodation assistant agent
-accomodation_assistant = ConversableAgent(
-    "accommodation_assistant",
+# create the accomodation booking assistant agent
+accommodation_booking_assistant = ConversableAgent(
+    "accommodation_booking_assistant",
     system_message="You help customers finding hotels and accomodations and booking them. When looking up accomodations, you can use external resources to provide more details. All retrieved information will be sent to the customer service which will present informations to the customer. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations and book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.", 
     description="This agent helps customers find accomodations and hotels and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
     )
 
-# create the activities assistant agent
-activities_assistant = ConversableAgent(
-    "activities_assistant",
+# create the activities booking assistant agent
+activities_booking_assistant = ConversableAgent(
+    "activities_booking_assistant",
     system_message="You help customers finding finding tickets for the attarctions and activities they want to do.", 
     description="This agent helps customers find tickets for activites, venues and events and book them. It can use external resources to provide more details.",
     llm_config={"config_list": config_list},
@@ -129,7 +129,7 @@ location_specialist = ReActAgent.from_tools(
 
 
 # create an autogen agent using the integration for llamaindex
-trip_assistant = LLamaIndexConversableAgent(
+trip_specialist_assistant = LLamaIndexConversableAgent(
     "trip_specialist",
     llama_index_agent=  location_specialist,
     system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
@@ -142,13 +142,13 @@ trip_assistant_experiece = Teachability(
     path_to_db_dir="./trip_assistant_experience",
     llm_config={"config_list": config_list})
 
-trip_assistant_experiece.add_to_agent(trip_assistant)
+trip_assistant_experiece.add_to_agent(trip_specialist_assistant)
 
 # register the tools with the agents
 register_function(
     find_flights,
     executor=terminal,
-    caller=flight_assistant,
+    caller=flight_booking_assistant_assistant,
     name="find_flights",
     description="A tool for finding flight options between two locations. usage find_flights(origin='London', destination='Tokyo', date=2025-04-15) to find flights.",
     )
@@ -156,7 +156,7 @@ register_function(
 register_function(
     book_flight,
     executor=customer_proxy,
-    caller=flight_assistant,
+    caller=flight_booking_assistant_assistant,
     name="book_flight",
     description="A tool for booking flights between two locations. use book_flight(flight_name='Flight 01',origin='London', destination='Tokyo',  departure_date=2025-04-15, passengers=1) to book a flight.",
     )
@@ -164,7 +164,7 @@ register_function(
 register_function(
     find_accomodations,
     executor=terminal,
-    caller=accomodation_assistant,
+    caller=accommodation_booking_assistant,
     name="find_accomodations",
     description="A tool for finding accomodation options in a location. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations.",
 )
@@ -172,7 +172,7 @@ register_function(
 register_function(
     book_accomodation,
     executor=customer_proxy,
-    caller=accomodation_assistant,
+    caller=accommodation_booking_assistant,
     name="book_accomodation",
     description="A tool for booking accomodation. use book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.",
     )
@@ -180,7 +180,7 @@ register_function(
 register_function(
     find_attractions_tickets,
     executor=terminal,
-    caller=activities_assistant,
+    caller=activities_booking_assistant,
     name="find_attractions_tickets",
     description="A tool for finding accomodation options in a location. use find_attractions_tickets(attraction='british museum', , number_of_people=1) to find tickets for activities and attractions.",
 )
@@ -188,7 +188,7 @@ register_function(
 register_function(
     book_attraction_tickets,
     executor=customer_proxy,
-    caller=activities_assistant,
+    caller=activities_booking_assistant,
     name="book_attraction_tickets",
     description="A tool for booking attraction tickets. use book_attraction_tickets(attraction='british museum', date='01/04/2025', number_of_people=1) to book tickets for activities and attractions.",
     )
@@ -212,7 +212,7 @@ register_function(
 
 # create a group chat, note that only the terminal  agents can communicate only with the front nad back office agents
 group_chat = GroupChat(
-    agents=[customer_proxy, activities_assistant,flight_assistant, accomodation_assistant, trip_assistant, customer_assistant, terminal],
+    agents=[customer_proxy, activities_booking_assistant,flight_booking_assistant_assistant, accommodation_booking_assistant, trip_specialist_assistant, customer_assistant, terminal],
     messages=[],
     max_round=1000,
     send_introductions=False,
