@@ -14,6 +14,29 @@ bookings = {
 
 emails = []
 
+# apis to send emails
+def send_booking_email(email: str, booking_details: dict) -> str:
+    """Send an email with full booking details. The booking details must be a dictionary."""
+    print(f"Sending email to {email}")
+    email_booking = []
+    value = {}
+    if not isinstance(booking_details, dict ):
+        value = booking_details.__dict__
+    else:
+        value = booking_details
+    email_booking.append(value)
+    
+    message = f"Dear traveller, \n\nWe are happy to confirm your booking. Here are the details: \n\n{json.dumps(obj= value, indent=4)}\n\nHave a great trip!\n\nThe travel team"
+    print(f"Email sent to {email} : { message}")
+    emails.append(message)
+    return f"Email sent to {email}"
+
+# apis to get bookings
+def get_bookings() -> dict:
+    """Usfeful for getting bookings."""
+    return bookings
+
+# apis to find and book tickets
 def find_attractions_tickets(attraction: str, number_of_people:int) -> dict:
     """Find tickets for an attraction for a given number of people."""
     return {
@@ -36,26 +59,8 @@ def book_attraction_tickets(attraction: str, date: date, number_of_people: int) 
     bookings["attractions"].append(attraction_booking)
 
     return attraction_booking
-def send_booking_email(email: str, booking_details: dict) -> str:
-    """Send an email with full booking details. The booking details must be a dictionary."""
-    print(f"Sending email to {email}")
-    email_booking = []
-    value = {}
-    if not isinstance(booking_details, dict ):
-        value = booking_details.__dict__
-    else:
-        value = booking_details
-    email_booking.append(value)
-    
-    message = f"Dear traveller, \n\nWe are happy to confirm your booking. Here are the details: \n\n{json.dumps(obj= value, indent=4)}\n\nHave a great trip!\n\nThe travel team"
-    print(f"Email sent to {email} : { message}")
-    emails.append(message)
-    return f"Email sent to {email}"
 
-def get_bookings() -> dict:
-    """Usfeful for getting bookings."""
-    return bookings
-
+# apis to find and book flights
 def find_flights(
         origin: str, 
         destination:str, 
@@ -96,6 +101,7 @@ def book_flight(
 
     return flight_booking
 
+# apis to find and book accomodations
 def find_accomodations(
         location: str, 
         date: date

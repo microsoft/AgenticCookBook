@@ -25,7 +25,7 @@ comedian = AssistantAgent(
     llm_config={"config_list": config_list}
 )
 
-# Create an instance of Teachability for the comedian
+# Create an instance of Teachability for the comedian, this will allow the comedian to learn from interactions
 teachability = Teachability(
     reset_db=False,
     path_to_db_dir="./comedian_assistant_experience",

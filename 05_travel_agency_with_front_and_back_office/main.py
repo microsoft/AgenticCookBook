@@ -17,8 +17,6 @@ from llamaindex_conversable_agent import LLamaIndexConversableAgent
 from tools.travel_tools import find_flights, book_flight, find_accomodations, book_accomodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
 import os
 
-start(logger_type="sqlite")
-
 # setup llamaindex
 llm = AzureOpenAI(
     deployment_name= os.environ.get("AZURE_OPENAI_MODEL", ""),
@@ -53,12 +51,14 @@ config_list = [
 ]
 
 # create autogent agents
+#create the customer agent as user proxy
 customer_proxy = ConversableAgent(
     "customer", 
     description="This the customer trying to book a trip, flights and accomodations.",
     human_input_mode="ALWAYS",
 )
 
+# create the flight assistant agent
 flight_assistant = ConversableAgent(
     "flight_booking_assistant",
     system_message="You help customers finding flights and booking them.  All retrieved information will be sent to the customer service which will present informations to the customer. Use the tool find_flights(origin='London', destination='Tokyo', date=2025-04-15) to find flights and book_flight(flight_name='Flight 01',origin='London', destination='Tokyo',  departure_date=2025-04-15, passengers=1) to book a flight.", 
@@ -67,11 +67,7 @@ flight_assistant = ConversableAgent(
     # human_input_mode="ALWAYS"
     )
 
-terminal = ConversableAgent(
-    "computer_terminal",
-    description="This computer terminal can be used to execute tools like booking flight and accommodations.",
-    )
-
+# create the accomodation assistant agent
 accomodation_assistant = ConversableAgent(
     "accommodation_assistant",
     system_message="You help customers finding hotels and accomodations and booking them. When looking up accomodations, you can use external resources to provide more details. All retrieved information will be sent to the customer service which will present informations to the customer. use find_accomodations(location='Tokyo', date=2025-04-15) to find accomodations and book_accomodation(accomodation_name='Tokyo', check_in_date=2025-04-15, nights=3, guests=1) to book accomodation.", 
@@ -79,6 +75,7 @@ accomodation_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     )
 
+# create the activities assistant agent
 activities_assistant = ConversableAgent(
     "activities_assistant",
     system_message="You help customers finding finding tickets for the attarctions and activities they want to do.", 
@@ -86,6 +83,7 @@ activities_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     )
 
+# create the customer assistant agent
 customer_assistant = ConversableAgent(
     "customer_service",
     system_message="You handle all the final comunication, sending booking confirmamtions and other details. You can access the current customer bookings details and use them in email and communications. use get_bookings() to get the bookings and send_booking_email(email='customer@domain.com', booking_details = \{\}) to send an email with booking details. As you learn more about the customers and their booking habits, you can use this information to provide better service.", 
@@ -93,6 +91,7 @@ customer_assistant = ConversableAgent(
     llm_config={"config_list": config_list},
     )
 
+# add teachability to the customer assistant, this will allow the agent to learn from interactions
 customer_assistant_experiece = Teachability(
     reset_db=False, 
     path_to_db_dir="./customer_assistant_experience",
@@ -100,8 +99,48 @@ customer_assistant_experiece = Teachability(
 
 customer_assistant_experiece.add_to_agent(customer_assistant)
 
-# register functions with autogen
+# create the computer terminal agent, this will have the ability to execute tools
+terminal = ConversableAgent(
+    "computer_terminal",
+    description="This computer terminal can be used to execute tools like booking flight and accommodations.",
+    )
 
+
+# create a react agent to use wikipedia tool
+# Get the wikipedia tool spec for llamaindex agents
+
+wiki_spec = WikipediaToolSpec()
+wikipedia_tool = wiki_spec.to_tool_list()[1]
+
+# create a memory buffer for the react agent
+memory = ChatSummaryMemoryBuffer(llm=llm, token_limit=16000)
+
+# create the location specialist agent using the ReAct agent pattern
+location_specialist = ReActAgent.from_tools(
+    tools=[wikipedia_tool], 
+    llm=llm,
+    max_iterations=8,
+    memory=memory,
+    verbose=True)
+
+
+# create an autogen agent using the integration for llamaindex
+trip_assistant = LLamaIndexConversableAgent(
+    "trip_specialist",
+    llama_index_agent=  location_specialist,
+    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
+    description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details. This agent helps in finding attractions, history and all that there si to know abotu a place",
+)
+
+# add teachability to the trip assistant, this will allow the agent to learn from interactions
+trip_assistant_experiece = Teachability(
+    reset_db=False, 
+    path_to_db_dir="./trip_assistant_experience",
+    llm_config={"config_list": config_list})
+
+trip_assistant_experiece.add_to_agent(trip_assistant)
+
+# register the tools with the agents
 register_function(
     find_flights,
     executor=terminal,
@@ -166,35 +205,6 @@ register_function(
     description="A tool for sending booking confirmation emails, call send_booking_email(email=dd@cp.com, booking_details = \{\}) to send an email with booking details.",
     )
 
-# create a react agent to use wikipedia tool
-wiki_spec = WikipediaToolSpec()
-# Get the search wikipedia tool
-wikipedia_tool = wiki_spec.to_tool_list()[1]
-
-memory = ChatSummaryMemoryBuffer(llm=llm, token_limit=16000)
-
-location_specialist = ReActAgent.from_tools(
-    tools=[wikipedia_tool], 
-    llm=llm,
-    max_iterations=8,
-    memory=memory,
-    verbose=True)
-
-
-# create an autogen agent using the react agent
-trip_assistant = LLamaIndexConversableAgent(
-    "trip_specialist",
-    llama_index_agent=  location_specialist,
-    system_message="You help customers finding more about places they would like to visit. You can use external resources to provide mroe details as you engage with the customer. As you learn more about the customers and their interests and passions, you can use this information to provide better service.",
-    description="This agents helps customers discover locations to visit, things to do, and other details about a location. It can use external resources to provide more details. This agent helps in finding attractions, history and all that there si to know abotu a place",
-)
-
-trip_assistant_experiece = Teachability(
-    reset_db=False, 
-    path_to_db_dir="./trip_assistant_experience",
-    llm_config={"config_list": config_list})
-
-trip_assistant_experiece.add_to_agent(trip_assistant)
 
 # create a group chat
 group_chat = GroupChat(
@@ -209,16 +219,17 @@ group_chat = GroupChat(
     },
 )
 
+
+# create a group chat manager
 group_chat_manager = GroupChatManager(
     groupchat=group_chat,
     llm_config={"config_list": config_list},
     # human_input_mode="ALWAYS"
 )
 
+# initiate a chat between the customer and the group chat manager
 chat_result = customer_proxy.initiate_chat(
     group_chat_manager,
     message="Hi I would like to book a travel package.",
 summary_method="reflection_with_llm",
 )
-
-stop()
