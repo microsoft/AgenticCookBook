@@ -1,5 +1,7 @@
 # **Microsoft Agentic Cookbook**
 
+The cookbooks are focused on conversational agents, all teh samples are using the [Autogen](https://github.com/microsoft/autogen) framework.
+
 ## Contents
 
 This cookbook includes:
