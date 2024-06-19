@@ -12,7 +12,7 @@ from llama_index.core.memory import ChatSummaryMemoryBuffer
 from llama_index.embeddings.azure_openai import AzureOpenAIEmbedding
 from llama_index.llms.azure_openai import AzureOpenAI
 from llama_index.tools.wikipedia import WikipediaToolSpec
-from llamaindex_conversable_agent import LLamaIndexConversableAgent
+from autogen.agentchat.contrib.llamaindex_conversable_agent import LLamaIndexConversableAgent
 from tools.travel_tools import find_flights, book_flight, find_accommodations, book_accommodation, get_bookings, send_booking_email, book_attraction_tickets, find_attractions_tickets
 import os
 
