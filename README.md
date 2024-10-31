@@ -1,6 +1,6 @@
 # **Microsoft Agentic Cookbook**
 
-The cookbooks are focused on conversational agents, all teh samples are using the [Autogen](https://github.com/microsoft/autogen) framework.
+The cookbooks are focused on conversational agents, all the samples are using the [Autogen](https://github.com/microsoft/autogen) framework.
 
 ## Contents
 
@@ -31,11 +31,11 @@ Keeping your API keys safe and secure is important when building any type of app
 - Open your new `.env` file and modify all the endpoints and api keys for all deployments as follows:
 
 # Open AI details
-AZURE_OPENAI_MODEL="gpt-4-32k"
-AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-ada-002"
-AZURE_OPENAI_KEY=""
-AZURE_OPENAI_ENDPOINT=""
-AZURE_OPENAI_API_VERSION="2024-02-01"
+- AZURE_OPENAI_MODEL="gpt-4-32k"
+- AZURE_OPENAI_EMBEDDING_MODEL="text-embedding-ada-002"
+- AZURE_OPENAI_KEY=""
+- AZURE_OPENAI_ENDPOINT=""
+- AZURE_OPENAI_API_VERSION="2024-02-01"
 
 ## How to Run locally on your computer
 
